@@ -37,13 +37,13 @@ resource "google_compute_instance" "jump_server" {
       sudo useradd -m -s /bin/bash bandi
       echo 'bandi:bandi' | sudo chpasswd
       sudo sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-      sudo sed -i 's/^Include /etc/ssh/sshd_config.d/*.conf/#Include /etc/ssh/sshd_config.d/*.conf/' /etc/ssh/sshd_config
+      sudo sed -i 's/^Include /etc/ssh/sshd_config.d/*.conf/#Include /etc/ssh/sshd_config.d/*.conf/' /etc/ssh/sshd_config     # crosscheck command in all meta data
       sudo systemctl restart sshd
       sudo -u bandi ssh-keygen -t rsa -b 4096 -f /home/bandi/.ssh/id_rsa_jumpserver -N ''
       sudo apt-get update
       sudo apt-get install -y sshpass
-      sudo -u bandi sshpass -p 'test' ssh-copy-id -i /home/bandi/.ssh/id_rsa_jumpserver.pub testuser@34.27.69.229
-      sudo -u bandi sshpass -p 'pass' ssh-copy-id -i /home/bandi/.ssh/id_rsa_jumpserver.pub produser@23.251.144.249
+      sudo -u bandi sshpass -p 'test' ssh-copy-id -i /home/bandi/.ssh/id_rsa_jumpserver.pub testuser@"ip"
+      sudo -u bandi sshpass -p 'pass' ssh-copy-id -i /home/bandi/.ssh/id_rsa_jumpserver.pub produser@"ip"
       echo 'Host test-server\n  Hostname 34.27.69.229\n  User testuser\n  IdentityFile ~/.ssh/id_rsa_jumpserver' | sudo tee -a /home/bandi/.ssh/config
       echo 'Host prod-server\n  HostName 23.251.144.249\n  User produser\n  IdentityFile ~/.ssh/id_rsa_jumpserver' | sudo tee -a /home/bandi/.ssh/config
       sudo chown bandi:bandi /home/bandi/.ssh/config
